@@ -20,7 +20,7 @@ public class TxtFileGenerator {
 
     private final static String COLUMN_SEPARATOR = ";";
     private final static String TXT_EXTENSION = ".txt";
-    private final static long DEFAULT_LINES = 25_000_000L;
+    private final static long DEFAULT_LINES = 1_000_000L;
 
     public TxtFileGeneratorResult generate(String filename) {
         return generate(filename, DEFAULT_LINES);
