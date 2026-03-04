@@ -22,6 +22,9 @@ public class TxtFileGenerator {
     private final static String TXT_EXTENSION = ".txt";
     private final static long DEFAULT_LINES = 1_000_000L;
 
+    /**
+     * This method is just an overload for {@link #generate(String, long)} if no lines are provided}
+     * */
     public TxtFileGeneratorResult generate(String filename) {
         return generate(filename, DEFAULT_LINES);
     }
