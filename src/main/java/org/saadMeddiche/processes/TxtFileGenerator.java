@@ -31,11 +31,9 @@ public class TxtFileGenerator {
     * */
     public TxtFileGeneratorResult generate(String filename, long lines) {
 
-        if(filename == null || filename.isEmpty()) {
-            return new TxtFileGeneratorResult(false, Optional.of("filename is null or empty"));
-        }
+        String treatedFilename = this.treatFilename(filename);
 
-        Optional<File> file = this.createFile(filename);
+        Optional<File> file = this.createFile(treatedFilename);
 
         if(file.isEmpty()) {
             return new TxtFileGeneratorResult(false, Optional.of("failed to create txt file"));
@@ -104,7 +102,7 @@ public class TxtFileGenerator {
 
         try {
 
-            File file = new File(addExtension(filename));
+            File file = new File(filename);
 
             boolean isFileCreated = file.createNewFile();
 
@@ -124,7 +122,16 @@ public class TxtFileGenerator {
 
     }
 
-    private String addExtension(String filename) {
+    private String treatFilename(String filename) {
+
+        if(filename == null || filename.isEmpty()) {
+            return UUID.randomUUID() + TXT_EXTENSION;
+        }
+
+        if(filename.endsWith(TXT_EXTENSION)) {
+            return filename;
+        }
+
         return filename + TXT_EXTENSION;
     }
 
