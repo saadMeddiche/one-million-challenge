@@ -21,13 +21,6 @@ public class SimpleTxtFileGenerator implements TxtFileGenerator {
     private final static Logger logger = Logger.getLogger(SimpleTxtFileGenerator.class.getName());
 
     /**
-     * This method is just an overload for {@link #generate(String, long)} if no lines are provided}
-     * */
-    public TxtFileGeneratorResult generate(String filename) {
-        return generate(filename, DEFAULT_LINES);
-    }
-
-    /**
      * This method does the necessary validations before it delegates generation work to {@link #mainProcess(File, long)}
     * */
     public TxtFileGeneratorResult generate(String filename, long lines) {

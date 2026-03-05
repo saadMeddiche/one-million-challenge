@@ -11,7 +11,9 @@ public interface TxtFileGenerator {
     String TXT_EXTENSION = ".txt";
     long DEFAULT_LINES = 1_000_000L;
 
-    TxtFileGeneratorResult generate(String filename);
+    default TxtFileGeneratorResult generate(String filename) {
+        return generate(filename, DEFAULT_LINES);
+    }
 
     TxtFileGeneratorResult generate(String filename, long lines);
 
