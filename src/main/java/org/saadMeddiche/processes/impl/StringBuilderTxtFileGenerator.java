@@ -7,19 +7,24 @@ import org.saadMeddiche.utils.FasterRandom;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
  * Generate the .txt file that will be used for the challenge. It uses strait forward generation.
  * <p>
- * Loop to generate content is a single string — <b>using List to store lines</b>, then writes the content into the file.
+ * Loop to generate content is a single string — <b>using StringBuilder to store lines</b>, then writes the content into the file.
  * This means the higher lines to generate. The higher memory/time it takes.
  * */
-public class SimpleTxtFileGenerator extends TxtFileGenerator {
+public class StringBuilderTxtFileGenerator extends TxtFileGenerator {
 
-    private final static Logger logger = Logger.getLogger(SimpleTxtFileGenerator.class.getName());
+    private final static Logger logger = Logger.getLogger(StringBuilderTxtFileGenerator.class.getName());
 
+    /**
+     * This method contains the main logic of {@link StringBuilderTxtFileGenerator}.
+     * */
     protected TxtFileGeneratorResult mainProcess(File file, long lines) {
 
         logger.info("Generating content for file: " + file.getAbsolutePath());
@@ -54,14 +59,14 @@ public class SimpleTxtFileGenerator extends TxtFileGenerator {
 
     private String buildFile(long lines) {
 
-        List<String> newLines = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
 
-        for(long i = 0 ; i < lines; i++) {
-            newLines.add(buildLine(i));
+        for(long i = 0; i < lines; i++) {
+            sb.append(buildLine(i));
+            sb.append(System.lineSeparator());
         }
 
-        return String.join(System.lineSeparator(), newLines);
-
+        return sb.toString();
     }
 
     private String buildLine(long id) {
