@@ -1,6 +1,6 @@
 package org.saadMeddiche;
 
-import org.saadMeddiche.processes.TxtFileGenerator;
+import org.saadMeddiche.processes.impl.SimpleTxtFileGenerator;
 
 import java.util.Scanner;
 
@@ -20,7 +20,7 @@ public class App
 
         long start = System.nanoTime();
 
-        TxtFileGenerator fg = new TxtFileGenerator();
+        SimpleTxtFileGenerator fg = new SimpleTxtFileGenerator();
         fg.generate("one-million-challenge", 25_000_000L);
 
         long end = System.nanoTime();
