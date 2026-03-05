@@ -1,6 +1,7 @@
 package org.saadMeddiche.processes;
 
 import org.saadMeddiche.models.TxtFileGeneratorResult;
+import org.saadMeddiche.utils.FasterRandom;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,7 +15,6 @@ import java.util.logging.Logger;
 public class TxtFileGenerator {
 
     private final static Logger logger = Logger.getLogger(TxtFileGenerator.class.getName());
-    private final static Random random = new Random();
 
     private final static String COLUMN_SEPARATOR = ";";
     private final static String TXT_EXTENSION = ".txt";
@@ -81,8 +81,6 @@ public class TxtFileGenerator {
 
     }
 
-    // 25_000_000 lines -> 4GB
-    // pre-allocated capacity: 18_382 ms, 20250 ms || no pre-allocated capacity: 19_886 ms, 22_963 ms
     private String buildFileContentUsingList(long lines) {
 
         List<String> newLines = new ArrayList<>();
@@ -95,25 +93,20 @@ public class TxtFileGenerator {
 
     }
 
-    private String buildLine(long id) {
-        return id + COLUMN_SEPARATOR + UUID.randomUUID() + COLUMN_SEPARATOR + random.nextInt();
-    }
-
-    // 25_000_000 lines -> 4GB
-    // pre-allocated capacity: 15_661 ms, 27_187 ms || no pre-allocated capacity: 17_211 ms, 17_767 ms
     private String buildFileContentUsingBuilder(long lines) {
 
         StringBuilder sb = new StringBuilder();
 
         for(long i = 0; i < lines; i++) {
-            sb.append(buildSeparatedLine(i));
+            sb.append(buildLine(i));
+            sb.append(System.lineSeparator());
         }
 
         return sb.toString();
     }
 
-    private String buildSeparatedLine(long id) {
-        return id + COLUMN_SEPARATOR + UUID.randomUUID() + COLUMN_SEPARATOR + random.nextInt() + System.lineSeparator();
+    private String buildLine(long id) {
+        return id + COLUMN_SEPARATOR + FasterRandom.uuid() + COLUMN_SEPARATOR + FasterRandom.number();
     }
 
     // ============================ HELPERS ============================
