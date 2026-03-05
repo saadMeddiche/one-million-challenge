@@ -21,7 +21,7 @@ public class App
         long start = System.nanoTime();
 
         TxtFileGenerator fg = new TxtFileGenerator();
-        fg.generate("one-million-challenge");
+        fg.generate("one-million-challenge", 25_000_000L);
 
         long end = System.nanoTime();
 

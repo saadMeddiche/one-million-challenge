@@ -5,9 +5,7 @@ import org.saadMeddiche.models.TxtFileGeneratorResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -54,7 +52,7 @@ public class TxtFileGenerator {
     private TxtFileGeneratorResult mainProcess(File file, long lines) {
 
         logger.info("Generating content for file: " + file.getAbsolutePath());
-        String content = this.buildFileContent(lines);
+        String content = this.buildFileContentUsingList(lines);
 
         logger.info("Writing content to file: " + file.getAbsolutePath());
         boolean isContentWritten = this.writeToFile(file, content);
@@ -83,19 +81,38 @@ public class TxtFileGenerator {
 
     }
 
-    // TODO: this should be replaced, StringBuilder will break if number of lines is too long
-    private String buildFileContent(long lines) {
+    // 25_000_000 lines -> 4GB
+    // pre-allocated capacity: 18_382 ms, 20250 ms || no pre-allocated capacity: 19_886 ms, 22_963 ms
+    private String buildFileContentUsingList(long lines) {
+
+        List<String> newLines = new ArrayList<>();
+
+        for(long i = 0 ; i < lines; i++) {
+            newLines.add(buildLine(i));
+        }
+
+        return String.join(System.lineSeparator(), newLines);
+
+    }
+
+    private String buildLine(long id) {
+        return id + COLUMN_SEPARATOR + UUID.randomUUID() + COLUMN_SEPARATOR + random.nextInt();
+    }
+
+    // 25_000_000 lines -> 4GB
+    // pre-allocated capacity: 15_661 ms, 27_187 ms || no pre-allocated capacity: 17_211 ms, 17_767 ms
+    private String buildFileContentUsingBuilder(long lines) {
 
         StringBuilder sb = new StringBuilder();
 
         for(long i = 0; i < lines; i++) {
-            sb.append(buildLine(i));
+            sb.append(buildSeparatedLine(i));
         }
 
         return sb.toString();
     }
 
-    private String buildLine(long id) {
+    private String buildSeparatedLine(long id) {
         return id + COLUMN_SEPARATOR + UUID.randomUUID() + COLUMN_SEPARATOR + random.nextInt() + System.lineSeparator();
     }
 
@@ -114,7 +131,7 @@ public class TxtFileGenerator {
             }
             else {
                 logger.warning(String.format("Unable to create file %s due to existing file with same name.", filename));
-                return Optional.empty();
+                return Optional.of(file);
             }
 
         }
