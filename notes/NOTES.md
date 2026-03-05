@@ -31,6 +31,8 @@
 - The more lines to generate the more memory and time are required. `(25M lines required around 4GB heap)`
 - The way of generating content is taking a lot of resources and time. 
 
+-------
+
 # 05-03-2026 DISCOVERIES
 
 ## DISCOVERY 1: reduce content_generation_speed using SplittableRandom and ThreadLocalRandom
