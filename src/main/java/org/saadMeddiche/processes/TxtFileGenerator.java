@@ -1,7 +1,6 @@
 package org.saadMeddiche.processes;
 
 import org.saadMeddiche.models.TxtFileGeneratorResult;
-import org.saadMeddiche.processes.impl.SimpleTxtFileGenerator;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +61,7 @@ public abstract class TxtFileGenerator {
                 return Optional.of(file);
             }
             else {
-                logger.warning(String.format("Unable to create file %s due to existing file with same name.", filename));
+                logger.info(String.format("A file with the same name of %s already exists.", filename));
                 return Optional.of(file);
             }
 
