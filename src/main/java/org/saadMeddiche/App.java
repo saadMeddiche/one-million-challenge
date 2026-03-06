@@ -1,5 +1,7 @@
 package org.saadMeddiche;
 
+import org.saadMeddiche.processes.TxtFileGenerator;
+import org.saadMeddiche.processes.impl.ChunkTxtFileGenerator;
 import org.saadMeddiche.processes.impl.SimpleTxtFileGenerator;
 
 import java.util.Scanner;
@@ -18,17 +20,26 @@ public class App
         System.out.println("Click to start");
         sc.nextLine();
 
-        long start = System.nanoTime();
-
-        SimpleTxtFileGenerator fg = new SimpleTxtFileGenerator();
-        fg.generate("one-million-challenge", 25_000_000L);
-
-        long end = System.nanoTime();
-
-        System.out.println("Total time: " + (end-start)/1_000_000 + " ms");
+        generation_script();
 
         System.out.println("Click to end");
         sc.nextLine();
 
     }
+
+    public static void generation_script() {
+
+        System.out.println("SCRIPT: generation_script #started");
+        long start = System.nanoTime();
+
+        TxtFileGenerator fg = new ChunkTxtFileGenerator();
+        fg.generate("one-million-challenge", 25_000_000L);
+
+        long end = System.nanoTime();
+
+        System.out.printf("SCRIPT: generation_script #ended %s ms", (end-start)/1_000_000);
+        System.out.println();
+
+    }
+
 }
