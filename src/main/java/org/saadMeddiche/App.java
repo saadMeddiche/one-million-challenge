@@ -3,6 +3,7 @@ package org.saadMeddiche;
 import org.saadMeddiche.processes.TxtFileGenerator;
 import org.saadMeddiche.processes.impl.ChunkTxtFileGenerator;
 import org.saadMeddiche.processes.impl.SimpleTxtFileGenerator;
+import org.saadMeddiche.processes.impl.StringBuilderTxtFileGenerator;
 
 import java.util.Scanner;
 
@@ -33,7 +34,9 @@ public class App
         long start = System.nanoTime();
 
         TxtFileGenerator fg = new ChunkTxtFileGenerator();
-        fg.generate("one-million-challenge", 25_000_000L);
+        //TxtFileGenerator fg = new SimpleTxtFileGenerator();
+        //TxtFileGenerator fg = new StringBuilderTxtFileGenerator();
+        fg.generate("one-million-challenge", 37_000_000L);
 
         long end = System.nanoTime();
 
