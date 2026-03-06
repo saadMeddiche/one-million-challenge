@@ -60,3 +60,16 @@
 ### Graph Difference
 - You can notice a lot of up/downs using `UUID.randomUUID()`
 - But the up is smoother using `FasterRandom`
+
+------
+
+# CONCLUSION
+
+- **Data Generation:** 
+  - `UUID.randomUUID()` uses `SecureRandom` by default. SecureRandom is `no-deterministic`. It takes extra time to generate randomness because it depends on the `entropy` from the physical world.
+  - The solution is to SplittableRandom or ThreadLocalRandom. They are `deterministic`. It takes less time to generate randomness because it depends on system time or simple counter.
+  - The time of generating 25M lines dropped `from 20s to 7-9s`.
+
+- **Data Concatenation:**
+  - Generally `StringBuilder` is faster than `List and String.join()`. (NOT REALLY SURE; I THINK THERE ARE SOME OTHER VARIABLES THAT I DIDN't TAKE IN CONSIDERATION)
+  - But the first one results in a lot of spikes ↑↓ **(check graph)**. while the second one has a smoother up ↑ in memory usage.
