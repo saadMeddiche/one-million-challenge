@@ -4,6 +4,7 @@ import org.saadMeddiche.models.TxtFileGeneratorResult;
 import org.saadMeddiche.processes.TxtFileGenerator;
 import org.saadMeddiche.utils.FasterRandom;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,11 +39,11 @@ public class SimpleTxtFileGenerator extends TxtFileGenerator {
 
     private boolean writeToFile(File file, List<String> lines) {
 
-        try(FileWriter fileWriter = new FileWriter(file)) {
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 
             for(String line : lines) {
-                fileWriter.write(line);
-                fileWriter.write(System.lineSeparator());
+                bufferedWriter.write(line);
+                bufferedWriter.write(System.lineSeparator());
             }
 
             return true;

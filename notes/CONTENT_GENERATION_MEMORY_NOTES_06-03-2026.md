@@ -7,7 +7,7 @@
   - Anything larger than that results in `java.lang.OutOfMemoryError: Required array length 2147483639 + 25 is too large`.
   - The OutOfMemory is given even if the program didn't reach the heap limit.
   - The heap size was 10GB. The program stopped at 6GB. **So, is not a question of memory, it is something else !!**
-- It took around `24_079 ms` to generate and write content into file.
+- It took around `20_261 ms` to generate and write content into file.
 
 ![success_generation](images/heap-10GB-37M_lines-StringBuilderTxtFileGenerator.png)
 
