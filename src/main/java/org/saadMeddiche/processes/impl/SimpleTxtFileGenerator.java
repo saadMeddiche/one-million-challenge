@@ -20,13 +20,13 @@ public class SimpleTxtFileGenerator extends TxtFileGenerator {
 
     private final static Logger logger = Logger.getLogger(SimpleTxtFileGenerator.class.getName());
 
-    protected TxtFileGeneratorResult mainProcess(File file, long lines) {
+    protected TxtFileGeneratorResult mainProcess(File file, long linesNumber) {
 
         logger.info("Generating content for file: " + file.getAbsolutePath());
-        String content = this.buildFile(lines);
+        List<String> lines = this.buildLines(linesNumber);
 
         logger.info("Writing content to file: " + file.getAbsolutePath());
-        boolean isContentWritten = this.writeToFile(file, content);
+        boolean isContentWritten = this.writeToFile(file, lines);
 
         if(isContentWritten) {
             return new TxtFileGeneratorResult(true, Optional.empty());
@@ -36,11 +36,14 @@ public class SimpleTxtFileGenerator extends TxtFileGenerator {
 
     }
 
-    private boolean writeToFile(File file, String content) {
+    private boolean writeToFile(File file, List<String> lines) {
 
         try(FileWriter fileWriter = new FileWriter(file)) {
 
-            fileWriter.write(content);
+            for(String line : lines) {
+                fileWriter.write(line);
+                fileWriter.write(System.lineSeparator());
+            }
 
             return true;
 
@@ -52,7 +55,7 @@ public class SimpleTxtFileGenerator extends TxtFileGenerator {
 
     }
 
-    private String buildFile(long lines) {
+    private List<String> buildLines(long lines) {
 
         List<String> newLines = new ArrayList<>();
 
@@ -60,7 +63,7 @@ public class SimpleTxtFileGenerator extends TxtFileGenerator {
             newLines.add(buildLine(i));
         }
 
-        return String.join(System.lineSeparator(), newLines);
+        return newLines;
 
     }
 

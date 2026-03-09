@@ -1,4 +1,4 @@
-# 05-03-2026 NOTES
+# NOTES
 
 ## NOTE 1: content_generation_speed_and_memory based on the tools that concatenate the lines `StringBuilder` and `List and String.join()`
 - I was able to create `TxtFileGenerator` that will generate the .txt file for the challenge.
@@ -33,7 +33,7 @@
 
 -------
 
-# 05-03-2026 DISCOVERIES
+# DISCOVERIES
 
 ## DISCOVERY 1: reduce content_generation_speed using SplittableRandom and ThreadLocalRandom
 - Because the content generation does not require the UUIDs to be secured.

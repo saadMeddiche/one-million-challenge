@@ -1,4 +1,4 @@
-# 06-03-2026 NOTES
+# NOTES
 
 ## NOTE 1: max lines supported by each implementation
 
@@ -70,3 +70,26 @@
 - Less memory but higher time speed.
 
 ![success_generation](images/heap-75MB-74M_lines-ChunkTxtFileGenerator.png)
+
+----
+
+# DISCOVERIES
+
+## DISCOVERY 1: StringBuilderTxtFileGenerator
+- The reason of `java.lang.OutOfMemoryError: Required array length 2147483639 + 25 is too large` when we exceed `37M lines`,
+because arrays in java are indexed by int (0 → 2.1B).
+- StringBuilder uses `byte[]` to store characters, that way if the string object is too large it will throw that exception.
+
+## DISCOVERY 2: SimpleTxtFileGenerator
+- The reason of `java.lang.OutOfMemoryError: Requested string length exceeds VM limit`, because the use of String.join().
+- String.join() also use `byte[]`, and arrays in java are indexed by int.
+- The Solution was to loop threw the lines and write them into the file, instead of merging them in one String.
+- It took around `3.5GB and 30s` to generate `37M lines`.
+- SimpleTxtFileGenerator now has no line limitation, **but it requires more time and memory to generate more lines.**
+
+----
+
+# CONCLUSION
+- Arrays in java are indexed by int. (0 → 2.1B). That results in some limitations when handling large of data sets.
+- Use chunks to control memory usage at the cost of time.
+
