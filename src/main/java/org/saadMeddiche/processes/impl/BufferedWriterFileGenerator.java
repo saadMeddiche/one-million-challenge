@@ -16,11 +16,11 @@ public class BufferedWriterFileGenerator extends TxtFileGenerator {
 
     private final static Logger logger = Logger.getLogger(BufferedWriterFileGenerator.class.getName());
 
-    protected TxtFileGeneratorResult mainProcess(File file, long lines) {
+    protected TxtFileGeneratorResult mainProcess(File file, long linesNumber) {
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 
-            for(int i = 0; i < lines; i++) {
+            for(int i = 0; i < linesNumber; i++) {
                 bw.write(buildLine(i));
                 bw.newLine();
             }
