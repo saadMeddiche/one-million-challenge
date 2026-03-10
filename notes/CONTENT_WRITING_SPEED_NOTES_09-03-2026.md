@@ -25,4 +25,4 @@ We will use `BufferedWriter` instead for faster writing speed.
     - **Time:** 10_452ms
 
 - Using `BufferedWriter` & `37M lines` (after)
-    - **Time:** 8_154ms
+    - **Time:** 7_395ms

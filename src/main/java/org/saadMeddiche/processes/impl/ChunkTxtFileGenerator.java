@@ -59,7 +59,7 @@ public class ChunkTxtFileGenerator extends TxtFileGenerator {
 
     private boolean writeIntoFile(File file, List<String> chunk) {
 
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 
             String content = buildContent(chunk);
 
