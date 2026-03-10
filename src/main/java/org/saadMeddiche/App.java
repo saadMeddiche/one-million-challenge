@@ -34,9 +34,9 @@ public class App
         System.out.println("SCRIPT: generation_script #started");
         long start = System.nanoTime();
         //TxtFileGenerator fg = new BufferedWriterFileGenerator();
-        //TxtFileGenerator fg = new ChunkTxtFileGenerator();
+        TxtFileGenerator fg = new ChunkTxtFileGenerator();
         //TxtFileGenerator fg = new SimpleTxtFileGenerator();
-        TxtFileGenerator fg = new StringBuilderTxtFileGenerator();
+        //TxtFileGenerator fg = new StringBuilderTxtFileGenerator();
         fg.generate("one-million-challenge", 37_000_000L);
 
         long end = System.nanoTime();

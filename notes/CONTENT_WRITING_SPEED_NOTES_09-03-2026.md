@@ -8,7 +8,7 @@ We will use `BufferedWriter` instead for faster writing speed.
 - Using `FileWriter` & `37M lines` (before)
     - **Time:** 20_261ms
 
-- Using `BufferedWriter` & `37M lines` (after'
+- Using `BufferedWriter` & `37M lines` (after)
     - **Time:** 18_901ms
 
 ## NOTE 2: SimpleTxtFileGenerator
@@ -22,7 +22,7 @@ We will use `BufferedWriter` instead for faster writing speed.
 ## NOTE 3: ChunkTxtFileGenerator 
 
 - Using `FileWriter` & `37M lines` (before)
-    - **Time:** ???
+    - **Time:** 10_452ms
 
 - Using `BufferedWriter` & `37M lines` (after)
-    - **Time:** ???
+    - **Time:** 8_154ms

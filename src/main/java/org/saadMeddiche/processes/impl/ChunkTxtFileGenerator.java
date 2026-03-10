@@ -4,6 +4,7 @@ import org.saadMeddiche.models.TxtFileGeneratorResult;
 import org.saadMeddiche.processes.TxtFileGenerator;
 import org.saadMeddiche.utils.FasterRandom;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,11 +59,11 @@ public class ChunkTxtFileGenerator extends TxtFileGenerator {
 
     private boolean writeIntoFile(File file, List<String> chunk) {
 
-        try(FileWriter fileWriter = new FileWriter(file, true)) {
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
 
             String content = buildContent(chunk);
 
-            fileWriter.write(content);
+            bufferedWriter.write(content);
 
             return true;
 
