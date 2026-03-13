@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Extract numbers from .txt file, summing them, then return the sum.
+ * */
 public abstract class TxtFileExtractor {
 
     private final static Logger logger = Logger.getLogger(TxtFileExtractor.class.getName());
@@ -14,12 +17,22 @@ public abstract class TxtFileExtractor {
     protected final String COLUMN_SEPARATOR = ";";
     protected final String TXT_EXTENSION = ".txt";
 
+    /**
+     * This method contains the main logic of {@link TxtFileExtractor}.
+     * The concrete classes should extract numbers from a file and return the sum of them.
+     * */
     protected abstract TxtFileExtractorResult mainProcess(File file, String columnSeparator);
 
+    /**
+     * This method is an overload of {@link #extract(String, String)}, in case the column separator is not provided
+     * */
     public final TxtFileExtractorResult extract(String filename) {
         return extract(filename, COLUMN_SEPARATOR);
     }
 
+    /**
+     * This method does the necessary validations before it delegate the extraction work to {@link #mainProcess(File, String)}
+     * */
     public final TxtFileExtractorResult extract(String filename, String columnSeparator) {
 
         String treatedFilename = this.treatFilename(filename);
@@ -35,6 +48,8 @@ public abstract class TxtFileExtractor {
         return this.mainProcess(file, columnSeparator);
     }
 
+
+    // ============================ HELPERS ============================
 
     private Optional<File> getFile(String filename) {
 
