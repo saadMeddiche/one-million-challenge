@@ -1,10 +1,8 @@
 package org.saadMeddiche;
 
-import org.saadMeddiche.processes.TxtFileGenerator;
-import org.saadMeddiche.processes.impl.BufferedWriterFileGenerator;
-import org.saadMeddiche.processes.impl.ChunkTxtFileGenerator;
-import org.saadMeddiche.processes.impl.SimpleTxtFileGenerator;
-import org.saadMeddiche.processes.impl.StringBuilderTxtFileGenerator;
+import org.saadMeddiche.processes.extractors.impl.StreamTxtFileExtractor;
+import org.saadMeddiche.processes.generators.TxtFileGenerator;
+import org.saadMeddiche.processes.generators.impl.*;
 
 import java.util.Scanner;
 
@@ -19,11 +17,20 @@ public class App
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Click to start");
-        sc.nextLine();
+        System.out.println("Choose script:");
+        System.out.println("1- generation_script");
+        System.out.println("2- extraction_script");
+        System.out.println();
 
-        generation_script();
+        String choice = sc.nextLine();
 
+        switch (choice) {
+            case "1": generation_script(); break;
+            case "2": extraction_script(); break;
+            default: extraction_script(); break;
+        }
+
+        System.out.println();
         System.out.println("Click to end");
         sc.nextLine();
 
@@ -33,16 +40,33 @@ public class App
 
         System.out.println("SCRIPT: generation_script #started");
         long start = System.nanoTime();
+
         TxtFileGenerator fg = new BufferedWriterFileGenerator();
-        //TxtFileGenerator fg = new ChunkTxtFileGenerator();
-        //TxtFileGenerator fg = new SimpleTxtFileGenerator();
-        //TxtFileGenerator fg = new StringBuilderTxtFileGenerator();
-        fg.generate("one-million-challenge", 37_000_000L);
+        fg.generate("one-million-challenge", 100_000_000L);
 
         long end = System.nanoTime();
-
         System.out.printf("SCRIPT: generation_script #ended %s ms", (end-start)/1_000_000);
-        System.out.println();
+
+    }
+
+    public static void extraction_script() {
+
+        System.out.println("SCRIPT: extraction_script #started");
+        long start = System.nanoTime();
+
+        StreamTxtFileExtractor tfe = new StreamTxtFileExtractor();
+        var result = tfe.extract("one-million-challenge");
+
+        if(result.success()) {
+            System.out.printf("SUM: %d", result.totalSum());
+            System.out.println();
+        } else {
+            result.failReason().ifPresent(System.err::println);
+            System.out.println();
+        }
+
+        long end = System.nanoTime();
+        System.out.printf("SCRIPT: extraction_script #ended %s ms", (end-start)/1_000_000);
 
     }
 
