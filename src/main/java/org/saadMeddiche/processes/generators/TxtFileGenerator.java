@@ -1,4 +1,4 @@
-package org.saadMeddiche.processes;
+package org.saadMeddiche.processes.generators;
 
 import org.saadMeddiche.models.TxtFileGeneratorResult;
 

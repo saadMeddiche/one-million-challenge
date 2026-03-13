@@ -1,15 +1,13 @@
-package org.saadMeddiche.processes.impl;
+package org.saadMeddiche.processes.generators.impl;
 
 import org.saadMeddiche.models.TxtFileGeneratorResult;
-import org.saadMeddiche.processes.TxtFileGenerator;
+import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.utils.FasterRandom;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 

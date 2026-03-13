@@ -1,7 +1,7 @@
-package org.saadMeddiche.processes.impl;
+package org.saadMeddiche.processes.generators.impl;
 
 import org.saadMeddiche.models.TxtFileGeneratorResult;
-import org.saadMeddiche.processes.TxtFileGenerator;
+import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.utils.FasterRandom;
 
 import java.io.BufferedWriter;
