@@ -1,2 +1,2 @@
-# TODO 1: BufferedWriter Vs FileWriter
-- Check `CONTENT_WRITING_SPEED_NOTES_09-03-2026` and provide an explanation fo the results
+# TODO 1: Skip String phase
+- I think if there is a way to generate the content in bytes and skip the string casting phase, it will improve the speed and memory.
