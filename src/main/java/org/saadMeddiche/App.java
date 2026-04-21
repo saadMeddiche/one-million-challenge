@@ -1,5 +1,7 @@
 package org.saadMeddiche;
 
+import org.saadMeddiche.processes.extractors.TxtFileExtractor;
+import org.saadMeddiche.processes.extractors.impl.ByteChannelTxtFileExtractor;
 import org.saadMeddiche.processes.extractors.impl.StreamTxtFileExtractor;
 import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.processes.generators.impl.*;
@@ -54,11 +56,14 @@ public class App
         System.out.println("SCRIPT: extraction_script #started");
         long start = System.nanoTime();
 
-        StreamTxtFileExtractor tfe = new StreamTxtFileExtractor();
+        TxtFileExtractor tfe = new ByteChannelTxtFileExtractor();
+        //TxtFileExtractor tfe = new StreamTxtFileExtractor();
         var result = tfe.extract("one-million-challenge");
 
         if(result.success()) {
             System.out.printf("SUM: %d", result.totalSum());
+            System.out.println();
+            System.out.println(-15673375262273L == result.totalSum());
             System.out.println();
         } else {
             result.failReason().ifPresent(System.err::println);
