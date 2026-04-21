@@ -67,7 +67,7 @@
 
 - **Data Generation:** 
   - `UUID.randomUUID()` uses `SecureRandom` by default. SecureRandom is `no-deterministic`. It takes extra time to generate randomness because it depends on the `entropy` from the physical world.
-  - The solution is to SplittableRandom or ThreadLocalRandom. They are `deterministic`. It takes less time to generate randomness because it depends on system time or simple counter.
+  - The solution is to use `SplittableRandom` or `ThreadLocalRandom`. They are `deterministic`. It takes less time to generate randomness because it depends on system time or simple counter.
   - The time of generating 25M lines dropped `from 20s to 7-9s`.
 
 - **Data Concatenation:**
