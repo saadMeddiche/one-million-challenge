@@ -25,6 +25,10 @@ public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
 
             int lineCount = 0;
 
+            int numberOfDigits = 1;
+
+            int numberThreshHold = 10;
+
             while(ch.read(bf) > 0) {
 
                 bf.flip();
@@ -55,7 +59,10 @@ public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
 
                 while(bf.position() < completedLinesPosition) {
 
-                    int numberOfDigits = lineCount == 0 ? 1 : (int) (Math.log10(lineCount) + 1);
+                    if(lineCount == numberThreshHold) {
+                        numberOfDigits++;
+                        numberThreshHold *= 10;
+                    }
 
                     int thirdColumnPosition = bf.position() + numberOfDigits + 36 + 2;
 
