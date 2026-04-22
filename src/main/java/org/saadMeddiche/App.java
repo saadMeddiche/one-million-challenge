@@ -1,8 +1,7 @@
 package org.saadMeddiche;
 
 import org.saadMeddiche.processes.extractors.TxtFileExtractor;
-import org.saadMeddiche.processes.extractors.impl.ByteChannelTxtFileExtractor;
-import org.saadMeddiche.processes.extractors.impl.StreamTxtFileExtractor;
+import org.saadMeddiche.processes.extractors.impl.SeekableByteChannelTxtFileExtractor;
 import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.processes.generators.impl.*;
 
@@ -56,7 +55,7 @@ public class App
         System.out.println("SCRIPT: extraction_script #started");
         long start = System.nanoTime();
 
-        TxtFileExtractor tfe = new ByteChannelTxtFileExtractor();
+        TxtFileExtractor tfe = new SeekableByteChannelTxtFileExtractor();
         //TxtFileExtractor tfe = new StreamTxtFileExtractor();
         var result = tfe.extract("one-million-challenge");
 

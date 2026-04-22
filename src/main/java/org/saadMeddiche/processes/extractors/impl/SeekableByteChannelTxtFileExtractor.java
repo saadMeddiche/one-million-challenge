@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
-public class ByteChannelTxtFileExtractor extends TxtFileExtractor {
+public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
 
     private final static int ALLOCATION_SIZE = 5_000_000;
 
