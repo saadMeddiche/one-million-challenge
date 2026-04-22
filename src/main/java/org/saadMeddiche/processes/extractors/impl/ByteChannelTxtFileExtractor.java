@@ -13,18 +13,17 @@ import java.util.Optional;
 
 public class ByteChannelTxtFileExtractor extends TxtFileExtractor {
 
-    //private final static int ALLOCATION_SIZE     = 500;
-    private final static int ALLOCATION_SIZE     = 100_000;
-    private final static int LAST_INDEX          = ALLOCATION_SIZE - 1;
+    private final static int ALLOCATION_SIZE = 5_000_000;
 
     protected TxtFileExtractorResult mainProcess(File file, String columnSeparator) {
-
 
         try (SeekableByteChannel ch = Files.newByteChannel(file.toPath(), StandardOpenOption.READ)) {
 
             ByteBuffer bf = ByteBuffer.allocate(ALLOCATION_SIZE);
 
-            int numbersSum = 0;
+            long numbersSum = 0;
+
+            int lineCount = 0;
 
             while(ch.read(bf) > 0) {
 
@@ -34,7 +33,9 @@ public class ByteChannelTxtFileExtractor extends TxtFileExtractor {
 
                 byte lastByte = bf.get(last_index);
 
-                if(lastByte != '\r' && lastByte != '\n') {
+                int completedLinesPosition = bf.limit();
+
+                if(lastByte != '\n') {
 
                     int unCompleteLineLength = 0;
 
@@ -42,16 +43,48 @@ public class ByteChannelTxtFileExtractor extends TxtFileExtractor {
 
                         byte b = bf.get(i);
 
-                        if(b == '\r' || b =='\n') break;
+                        if(b =='\n') break;
 
                         unCompleteLineLength++;
 
                     }
 
-                    bf.position(bf.limit() - unCompleteLineLength);
-                    bf.compact();
+                    completedLinesPosition = bf.limit() - unCompleteLineLength;
 
                 }
+
+                while(bf.position() < completedLinesPosition) {
+
+                    int numberOfDigits = lineCount == 0 ? 1 : (int) (Math.log10(lineCount) + 1);
+
+                    int thirdColumnPosition = bf.position() + numberOfDigits + 36 + 2;
+
+                    byte numberNature = numberNature(bf.get(thirdColumnPosition));
+
+                    bf.position(thirdColumnPosition + (numberNature & 0b0000_0001) );
+
+                    byte b = bf.get();
+
+                    int number = 0;
+
+                    do {
+                        number = number * 10 + (b - '0');
+                        b = bf.get();
+                    }
+                    while (b != '\r' && b != '\n');
+
+                    if(b != '\n') bf.position(bf.position() + 1);
+
+                    number *= (numberNature & 0b0000_0010) == 0b0000_0010 ? 1 : -1;
+
+                    numbersSum += number;
+
+                    lineCount++;
+
+                }
+
+                bf.position(completedLinesPosition);
+                bf.compact();
 
 
             }
@@ -65,87 +98,13 @@ public class ByteChannelTxtFileExtractor extends TxtFileExtractor {
 
     }
 
+    private byte numberNature(byte b) {
 
-    protected TxtFileExtractorResult mainProcesss(File file, String columnSeparator) {
+        if(b == '-') return 0b0000_0001;
 
-        byte columnSeparatorByte = columnSeparator.getBytes()[0];
+        if(b == '+') return 0b0000_0011;
 
-        try (SeekableByteChannel ch = Files.newByteChannel(file.toPath(), StandardOpenOption.READ)) {
-
-            ByteBuffer bf = ByteBuffer.allocate(ALLOCATION_SIZE);
-
-            int numbersSum = 0;
-
-            int lineCount = 0;
-
-            while(ch.read(bf) > 0) {
-                bf.flip();
-
-                int number = 0;
-
-                int numberOfDigits = lineCount == 0 ? 1 : (int) (Math.log10(lineCount) + 1);
-
-                boolean isNegative = bf.get(numberOfDigits + 38) == '-';
-
-                bf.position(numberOfDigits + 38 + (isNegative ? 1 : 0));
-
-                while(bf.hasRemaining()) {
-
-                    byte b = bf.get();
-
-                    if(b == '\r') {
-
-                        lineCount++;
-
-                        numberOfDigits = lineCount == 0 ? 1 : (int) (Math.log10(lineCount) + 1);
-
-                        isNegative = bf.get(numberOfDigits + 38) == '-';
-
-                        bf.position(bf.position() + numberOfDigits + 38 + (isNegative ? 1 : 0) + 1);
-
-                        if(isNegative) {
-                            number *= -1;
-                        }
-
-                        numbersSum += number;
-                        number = 0;
-
-                        continue;
-                    }
-
-                    number = number * 10 + (b - '0');
-
-                }
-
-                byte lastByte = bf.get(LAST_INDEX);
-
-                if(lastByte != '\r' && lastByte != '\n') {
-
-                    int unCompleteLineLength = 0;
-
-                    for(int i = LAST_INDEX ; i >= 0 ; i--) {
-
-                        if(bf.get(i) == '\n') break;
-
-                        unCompleteLineLength++;
-
-                    }
-
-                    bf.position(ALLOCATION_SIZE - unCompleteLineLength);
-                    bf.compact();
-
-                }
-
-                bf.clear();
-            }
-
-
-            return new TxtFileExtractorResult(true, numbersSum, Optional.empty());
-
-        }
-        catch ( IOException e ) {
-            return new TxtFileExtractorResult(false , 0,  Optional.of(e.getMessage()));
-        }
+        return 0b0000_0010;
 
     }
 
