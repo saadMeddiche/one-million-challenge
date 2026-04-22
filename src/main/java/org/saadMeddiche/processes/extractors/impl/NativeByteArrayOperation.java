@@ -1,7 +1,6 @@
 package org.saadMeddiche.processes.extractors.impl;
 
 import org.saadMeddiche.models.TxtFileExtractorResult;
-import org.saadMeddiche.processes.extractors.TxtFileExtractor;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,15 +10,14 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
-public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
+public class NativeByteArrayOperation extends SeekableByteChannelTxtFileExtractor {
 
-    protected final static int ALLOCATION_SIZE = 5_000_000;
-
-    protected TxtFileExtractorResult mainProcess(File file, String columnSeparator) {
+    protected TxtFileExtractorResult mainProcesses(File file, String columnSeparator) {
 
         try (SeekableByteChannel ch = Files.newByteChannel(file.toPath(), StandardOpenOption.READ)) {
 
             ByteBuffer bf = ByteBuffer.allocate(ALLOCATION_SIZE);
+            byte[] bytes = bf.array();
 
             long numbersSum = 0;
 
@@ -34,20 +32,17 @@ public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
                 bf.flip();
 
                 int last_index = bf.limit() - 1;
-
-                byte lastByte = bf.get(last_index);
+                int position = bf.position();
 
                 int completedLinesPosition = bf.limit();
 
-                if(lastByte != '\n') {
+                if(bytes[last_index] != '\n') {
 
                     int unCompleteLineLength = 0;
 
                     for(int i = last_index ; i >= 0 ; i--) {
 
-                        byte b = bf.get(i);
-
-                        if(b =='\n') break;
+                        if(bytes[i] =='\n') break;
 
                         unCompleteLineLength++;
 
@@ -57,30 +52,30 @@ public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
 
                 }
 
-                while(bf.position() < completedLinesPosition) {
+                while(position < completedLinesPosition) {
 
                     if(lineCount == numberThreshHold) {
                         numberOfDigits++;
                         numberThreshHold *= 10;
                     }
 
-                    int thirdColumnPosition = bf.position() + numberOfDigits + 36 + 2;
+                    int thirdColumnPosition = position + numberOfDigits + 36 + 2;
 
-                    byte numberNature = numberNature(bf.get(thirdColumnPosition));
+                    byte numberNature = numberNature(bytes[thirdColumnPosition]);
 
-                    bf.position(thirdColumnPosition + (numberNature & 0b0000_0001) );
+                    position = thirdColumnPosition + (numberNature & 0b0000_0001);
 
-                    byte b = bf.get();
+                    byte b = bytes[position++];
 
                     int number = 0;
 
                     do {
                         number = number * 10 + (b - '0');
-                        b = bf.get();
+                        b = bytes[position++];
                     }
                     while (b != '\r' && b != '\n');
 
-                    if(b != '\n') bf.position(bf.position() + 1);
+                    if(b != '\n') position++;
 
                     number *= (numberNature & 0b0000_0010) == 0b0000_0010 ? 1 : -1;
 
@@ -102,16 +97,6 @@ public class SeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
         catch ( IOException e ) {
             return new TxtFileExtractorResult(false , 0,  Optional.of(e.getMessage()));
         }
-
-    }
-
-    protected byte numberNature(byte b) {
-
-        if(b == '-') return 0b0000_0001;
-
-        if(b == '+') return 0b0000_0011;
-
-        return 0b0000_0010;
 
     }
 

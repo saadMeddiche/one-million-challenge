@@ -55,6 +55,7 @@ public class App
         System.out.println("SCRIPT: extraction_script #started");
         long start = System.nanoTime();
 
+        //TxtFileExtractor tfe = new NativeByteArrayOperation;
         TxtFileExtractor tfe = new SeekableByteChannelTxtFileExtractor();
         //TxtFileExtractor tfe = new StreamTxtFileExtractor();
         var result = tfe.extract("one-million-challenge");
