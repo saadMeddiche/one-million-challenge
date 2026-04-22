@@ -7,6 +7,7 @@ import org.saadMeddiche.processes.extractors.impl.emptyVersions.*;
 import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.processes.generators.impl.*;
 
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,12 @@ import java.util.Scanner;
  */
 public class App 
 {
+    private final static Map<TxtFileExtractor, String> EXTRACTORS = Map.of(
+            new EmptyBufferReaderTxtFileExtractor(),  "emptyBufferReader",
+            new EmptySeekableByteChannelTxtFileExtractor(),  "emptySeekableByteChannel",
+            new EmptyStreamTxtFileExtractor(),  "emptyStreamTxtFile"
+    );
+
     public static void main( String[] args )
     {
 
@@ -53,33 +60,31 @@ public class App
     }
 
     public static void extraction_script() {
+        EXTRACTORS.forEach(App::extraction_script);
+    }
 
-        System.out.println("SCRIPT: extraction_script #started");
+    public static void extraction_script(TxtFileExtractor tfe, String extractorName) {
+
+        System.out.println();
+        System.out.println("SCRIPT: extraction_script(" + extractorName + ") #started");
+
         long start = System.nanoTime();
-
-        TxtFileExtractor tfe = new BufferReaderTxtFileExtractor();
-        //TxtFileExtractor tfe = new EmptyBufferReaderTxtFileExtractor();
-
-        //TxtFileExtractor tfe = new SeekableByteChannelTxtFileExtractor();
-        //TxtFileExtractor tfe = new EmptySeekableByteChannelTxtFileExtractor();
-
-        //TxtFileExtractor tfe = new StreamTxtFileExtractor();
-        //TxtFileExtractor tfe = new EmptyStreamTxtFileExtractor();
-
         var result = tfe.extract("one-million-challenge");
+        long end = System.nanoTime();
 
         if(result.success()) {
-            System.out.printf("SUM: %d", result.totalSum());
-            System.out.println();
-            System.out.println(-15673375262273L == result.totalSum());
-            System.out.println();
+
+            System.out.printf("SCRIPT: extraction_script(%s) #ended #time(%s ms) #sum(%s$%b)",
+                    extractorName, (end-start)/1_000_000, result.totalSum(), -15673375262273L == result.totalSum());
+
         } else {
+
             result.failReason().ifPresent(System.err::println);
             System.out.println();
+
         }
 
-        long end = System.nanoTime();
-        System.out.printf("SCRIPT: extraction_script #ended %s ms", (end-start)/1_000_000);
+        System.out.println();
 
     }
 
