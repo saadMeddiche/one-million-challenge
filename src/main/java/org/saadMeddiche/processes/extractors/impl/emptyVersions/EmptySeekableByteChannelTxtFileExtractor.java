@@ -1,7 +1,8 @@
-package org.saadMeddiche.processes.extractors.impl;
+package org.saadMeddiche.processes.extractors.impl.emptyVersions;
 
 import org.saadMeddiche.models.TxtFileExtractorResult;
 import org.saadMeddiche.processes.extractors.TxtFileExtractor;
+import org.saadMeddiche.processes.extractors.impl.SeekableByteChannelTxtFileExtractor;
 
 import java.io.File;
 import java.io.IOException;
