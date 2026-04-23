@@ -7,6 +7,7 @@ import org.saadMeddiche.processes.extractors.impl.emptyVersions.*;
 import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.processes.generators.impl.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -16,11 +17,20 @@ import java.util.Scanner;
  */
 public class App 
 {
-    private final static Map<TxtFileExtractor, String> EXTRACTORS = Map.of(
-            new EmptyBufferReaderTxtFileExtractor(),  "emptyBufferReader",
-            new EmptySeekableByteChannelTxtFileExtractor(),  "emptySeekableByteChannel",
-            new EmptyStreamTxtFileExtractor(),  "emptyStreamTxtFile"
-    );
+    private final static Map<TxtFileExtractor, String> EXTRACTORS = new LinkedHashMap<>();
+
+    static {
+
+        EXTRACTORS.put(new EmptyStreamTxtFileExtractor(), "emptyStreamTxtFile");
+        EXTRACTORS.put(new StreamTxtFileExtractor(), "streamTxtFile");
+
+        EXTRACTORS.put(new EmptyBufferReaderTxtFileExtractor(), "emptyBufferReader");
+        EXTRACTORS.put(new BufferReaderTxtFileExtractor(), "bufferReader");
+
+        EXTRACTORS.put(new EmptySeekableByteChannelTxtFileExtractor(), "emptySeekableByteChannel");
+        EXTRACTORS.put(new SeekableByteChannelTxtFileExtractor(), "seekableByteChannel");
+
+    }
 
     public static void main( String[] args )
     {
