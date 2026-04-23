@@ -26,7 +26,8 @@ public class EmptySeekableByteChannelTxtFileExtractor extends TxtFileExtractor {
 
         try (SeekableByteChannel ch = Files.newByteChannel(file.toPath(), StandardOpenOption.READ)) {
 
-            ByteBuffer bf = ByteBuffer.allocate(ALLOCATION_SIZE);
+            ByteBuffer bf = ByteBuffer.allocateDirect(ALLOCATION_SIZE);
+            //ByteBuffer bf = ByteBuffer.allocate(ALLOCATION_SIZE);
 
             while(ch.read(bf) > 0) {
                 bf.flip();
