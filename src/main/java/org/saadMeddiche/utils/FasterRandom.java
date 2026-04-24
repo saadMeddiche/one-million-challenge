@@ -20,4 +20,8 @@ public class FasterRandom {
         return random.nextInt();
     }
 
+    public static long numberAsLong() {
+        return random.nextLong();
+    }
+
 }
