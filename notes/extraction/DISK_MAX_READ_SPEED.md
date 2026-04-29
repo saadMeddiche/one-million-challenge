@@ -7,7 +7,7 @@
 ![command_result_example](images/window_command_disk_read_speed.png)
 
 ## Disks max read speed
-- By knowing the max read speed of the current machine (`4,879.346 MP/s`), I can at least have a vision if the code is good or bad.
+- By knowing the max read speed of the current machine (`4,879.346 MB/s`), I can at least have a vision if the code is good or bad.
 
 ## Sample Size
 - the sample that I will use for testing has 100M lines and weights `5787.15648 MB`
