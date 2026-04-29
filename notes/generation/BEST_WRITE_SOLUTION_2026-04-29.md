@@ -25,6 +25,6 @@
 ![memory_cpu_DirectByteBuffer_UUIDTool.writeUUID().png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_UUIDTool.writeUUID()_memory_cpu_usage.png)
 
  - Using `FasterRandom.uuid().toString().getBytes()`: `7_203 ms`
- - **Resource usage:** we notice that there are no spikes ↑↓ at all in memory
+ - **Resource usage:** we notice that there are memory spikes ↑↓
 
 ![memory_cpu_DirectByteBuffer_FasterRandom.uuid().toString().getBytes().png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_FasterRandom.uuid()_memory_cpu_usage.png)
