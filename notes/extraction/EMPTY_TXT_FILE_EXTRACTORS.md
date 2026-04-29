@@ -34,6 +34,6 @@
 ![memory_cpu_HeapByteBuffer.png](images/EmptySeekableByteChannelTxtFileExtractor_HeapByteBuffer_memory_cpu_usage.png)
 
 - **Time using DirectByteBuffer:** `2195 ms`
-- **Resource usage:** we notice that there are no spikes ↑↓ at all in memory
+- **Resource usage:** we notice that the memory usage is the same from the beginning until the end of the process
 
 ![memory_cpu_DirectByteBuffer.png](images/EmptySeekableByteChannelTxtFileExtractor_DirectByteBuffer_memory_cpu_usage.png)
