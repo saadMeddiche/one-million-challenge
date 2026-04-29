@@ -1,3 +1,5 @@
+<!-- NOTE: the BufferedWriterFileGenerator is no longer the faster solution, it was beaten by SeekableByteChannelTxtFileGenerator -->
+
 # Best solution to write content into a file
 
 - BufferedWriterFileGenerator is the fastest and best memory efficient generator.
