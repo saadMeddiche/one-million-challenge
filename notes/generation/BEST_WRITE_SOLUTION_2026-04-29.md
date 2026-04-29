@@ -16,7 +16,15 @@
 
 ![memory_cpu_HeapByteBuffer.png](images/SeekableByteChannelTxtFileGenerator_HeapByteBuffer_memory_cpu_usage.png)
 
-- **Time using DirectByteBuffer:** `6_618 ms`
-- **Resource usage:** we notice that there are no spikes ↑↓ at all in memory
+- **Time using DirectByteBuffer:**
 
-![memory_cpu_DirectByteBuffer.png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_memory_cpu_usage.png)
+---
+ - Using `UUIDTool.writeUUID()`: `6_618 ms`
+ - **Resource usage:** we notice that there are no spikes ↑↓ at all in memory
+
+![memory_cpu_DirectByteBuffer_UUIDTool.writeUUID().png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_UUIDTool.writeUUID()_memory_cpu_usage.png)
+
+ - Using `FasterRandom.uuid().toString().getBytes()`: `7_203 ms`
+ - **Resource usage:** we notice that there are no spikes ↑↓ at all in memory
+
+![memory_cpu_DirectByteBuffer_FasterRandom.uuid().toString().getBytes().png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_FasterRandom.uuid()_memory_cpu_usage.png)
