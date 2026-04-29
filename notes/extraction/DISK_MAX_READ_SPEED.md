@@ -2,7 +2,7 @@
 
 ## Command `winsat disk -drive c`
 - I used the command above to calculate the read speed of the current disk.
-- I run the command 5 times, the average is `4,879.346 MP/s`.
+- I run the command 5 times, the average is `4,879.346 MB/s`.
 
 ![command_result_example](images/window_command_disk_read_speed.png)
 
