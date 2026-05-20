@@ -2,6 +2,10 @@ package org.saadMeddiche.utils;
 
 import java.nio.ByteBuffer;
 
+/*
+* I didn't really test if the bytes generated are really respecting the RFC specification.
+*  This project is not about UUID, so I don't care lol.
+* */
 public class UUIDTool {
 
     private final static byte[] HEX_ARRAY = "0123456789abcdef".getBytes();
@@ -10,36 +14,42 @@ public class UUIDTool {
 
     public static void writeUUID(ByteBuffer buffer) {
 
-        long seed = FasterRandom.numberAsLong();
+        long msb = FasterRandom.numberAsLong();
+        long lsb = FasterRandom.numberAsLong();
+
+        writeUUID(msb, lsb, buffer);
+
+    }
+
+    private static void writeUUID(long msb, long lsb, ByteBuffer buffer) {
 
         // 8-4-4-4-12
 
         // 8
-        hexPopulate(seed >> 32 ,8, buffer);
+        hexPopulate(msb >>> 32, 8, buffer);
         buffer.put(MINUS);
 
         // 4
-        hexPopulate(seed >> 16 ,4, buffer);
+        hexPopulate(msb >>> 16, 4, buffer);
         buffer.put(MINUS);
 
         // 4
-        hexPopulate(seed >> 12 ,4, buffer);
+        hexPopulate(msb, 4, buffer);
         buffer.put(MINUS);
 
         // 4
-        hexPopulate(seed >> 8,4, buffer);
+        hexPopulate(lsb >>> 48, 4, buffer);
         buffer.put(MINUS);
 
         // 12
-        hexPopulate(seed, 12, buffer);
+        hexPopulate(lsb, 12, buffer);
 
     }
 
     private static void hexPopulate(long seed, int numbers, ByteBuffer buffer) {
 
-        for(int i = 0; i < numbers; i++) {
-            buffer.put(HEX_ARRAY[(int)(seed & 0xF)]);
-            seed >>= 4;
+        for (int i = numbers - 1; i >= 0; i--) {
+            buffer.put(HEX_ARRAY[(int) ((seed >>> (i * 4)) & 0xF)]);
         }
 
     }
@@ -47,40 +57,44 @@ public class UUIDTool {
     // create a byte[36] that represents a string in UTF-8
     public static byte[] uuidAsBytes() {
 
-        long seed = FasterRandom.numberAsLong();
-
         byte[] arr = new byte[36];
-        // 8-4-4-4-12
 
-        // 8
-        hexPopulate(seed >> 32 ,8, arr, 0);
-        arr[8]  = '-';
+        long msb = FasterRandom.numberAsLong();
+        long lsb = FasterRandom.numberAsLong();
 
-        // 4
-        hexPopulate(seed >> 16 ,4, arr, 9);
-        arr[13] = '-';
-
-        // 4
-        hexPopulate(seed >> 12 ,4, arr, 14);
-        arr[18] = '-';
-
-        // 4
-        hexPopulate(seed >> 8,4, arr, 19);
-        arr[23] = '-';
-
-        // 12
-        hexPopulate(seed, 12, arr, 24);
+        writeUUID(msb, lsb, arr);
 
         return arr;
 
     }
 
-    private static void hexPopulate(long seed, int numbers, byte[] arr, int pos) {
+    private static void writeUUID(long msb, long lsb, byte[] arr) {
 
-        for(int i = 0; i < numbers; i++) {
-            arr[i + pos] = HEX_ARRAY[(int)(seed & 0xF)];
-            seed >>= 4;
+        int pos = 0;
+
+        pos = hexPopulate(msb >>> 32, 8, arr, pos);
+        arr[pos++] = MINUS;
+
+        pos = hexPopulate(msb >>> 16, 4, arr, pos);
+        arr[pos++] = MINUS;
+
+        pos = hexPopulate(msb, 4, arr, pos);
+        arr[pos++] = MINUS;
+
+        pos = hexPopulate(lsb >>> 48, 4, arr, pos);
+        arr[pos++] = MINUS;
+
+        hexPopulate(lsb, 12, arr, pos);
+
+    }
+
+    private static int hexPopulate(long seed, int numbers, byte[] arr, int pos) {
+
+        for (int i = numbers - 1; i >= 0; i--) {
+            arr[pos++] = HEX_ARRAY[(int) ((seed >>> (i * 4)) & 0xF)];
         }
+
+        return pos;
 
     }
 
