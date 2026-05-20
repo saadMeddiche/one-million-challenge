@@ -11,15 +11,33 @@
 
 ### SeekableByteChannelTxtFileGenerator
 
-- **Time using HeapByteBuffer:** `8_301 ms`
-- **Resource usage:** we notice a small bump in memory usage (~5MB) very close to allocation size (~5MB).
+—————————————————
 
-![memory_cpu_HeapByteBuffer.png](images/SeekableByteChannelTxtFileGenerator_HeapByteBuffer_memory_cpu_usage.png)
-
-- **Time using DirectByteBuffer:**
+- **Time using HeapByteBuffer:**
+ 
+—————————————————
 
 ---
- - Using `UUIDTool.writeUUID()`: `6_618 ms`
+
+- Using `UUIDTool.writeUUID()`: `8_287 ms`
+- **Resource usage:** we notice a small bump in memory usage (~5MB) very close to allocation size (~5MB).
+
+![memory_cpu_HeapByteBuffer_UUIDTool.writeUUID().png](images/SeekableByteChannelTxtFileGenerator_HeapByteBuffer_UUIDTool.writeUUID()_memory_cpu_usage.png)
+
+- Using `FasterRandom.uuid().toString().getBytes()`: `7_778 ms`
+- **Resource usage:** we notice that there are memory spikes ↑↓
+
+![memory_cpu_HeapByteBuffer_FasterRandom.uuid().png](images/SeekableByteChannelTxtFileGenerator_HeapByteBuffer_FasterRandom.uuid()_memory_cpu_usage.png)
+
+—————————————————
+
+- **Time using DirectByteBuffer :**
+
+—————————————————
+
+---
+
+ - Using `UUIDTool.writeUUID()`: `6_473 ms`
  - **Resource usage:** we notice that there are no spikes ↑↓ at all in memory
 
 ![memory_cpu_DirectByteBuffer_UUIDTool.writeUUID().png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_UUIDTool.writeUUID()_memory_cpu_usage.png)
