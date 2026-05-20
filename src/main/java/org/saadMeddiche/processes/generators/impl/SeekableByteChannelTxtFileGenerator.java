@@ -40,8 +40,8 @@ public class SeekableByteChannelTxtFileGenerator extends TxtFileGenerator {
 
                 writeNumber(buffer, i);
                 buffer.put(COLUMN_SEPARATOR);
-//                UUIDTool.writeUUID(buffer);
-                buffer.put(FasterRandom.uuid().toString().getBytes());
+                UUIDTool.writeUUID(buffer);
+               // buffer.put(FasterRandom.uuid().toString().getBytes());
                 buffer.put(COLUMN_SEPARATOR);
                 writeNumber(buffer, FasterRandom.number());
                 buffer.put(CRLF);

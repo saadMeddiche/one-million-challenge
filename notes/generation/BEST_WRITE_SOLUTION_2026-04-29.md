@@ -46,3 +46,11 @@
  - **Resource usage:** we notice that there are memory spikes ↑↓
 
 ![memory_cpu_DirectByteBuffer_FasterRandom.uuid().toString().getBytes().png](images/SeekableByteChannelTxtFileGenerator_DirectByteBuffer_FasterRandom.uuid()_memory_cpu_usage.png)
+
+## CONCLUSIONS
+
+- The reason why **BufferedWriterFileGenerator** `11_198 ms` is slower and consumes more memory than **SeekableByteChannelTxtFileGenerator->DirectByteBuffer->UUIDTool.writeUUID()** `6_473 ms` is mainly because:
+  - It generates a full String line for every record `id + COLUMN_SEPARATOR + FasterRandom.uuid() + COLUMN_SEPARATOR + FasterRandom.number();`, which create many temporary objects and increases GC work.
+  - Also, `BufferWriter` works on characters, so the output needs to be encoded to bytes before being written into disk.
+  - `SeekableByteChannel` writes prebuilt bytes that represent the record into a reusable bytebuffer then batch the output.
+  -  The `SeekableByteChannelTxtFileGenerator` uses `UUIDTool.writeUUID()` that writes UUID text bytes directly in the bytebuffer without the intermediate toString() and toBytes(), which explain the lower memory usage and better time.
