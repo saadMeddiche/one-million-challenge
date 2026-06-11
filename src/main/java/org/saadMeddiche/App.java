@@ -2,13 +2,11 @@ package org.saadMeddiche;
 
 import org.saadMeddiche.processes.extractors.TxtFileExtractor;
 import org.saadMeddiche.processes.extractors.impl.*;
-import org.saadMeddiche.processes.extractors.impl.emptyVersions.*;
 
 import org.saadMeddiche.processes.generators.TxtFileGenerator;
 import org.saadMeddiche.processes.generators.impl.*;
+import org.saadMeddiche.utils.Timer;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -17,37 +15,29 @@ import java.util.Scanner;
  */
 public class App 
 {
-    private final static Map<TxtFileExtractor, String> EXTRACTORS = new LinkedHashMap<>();
 
-    static {
+    public static final long LINES_TO_GENERATE = 100_000_000L;
+    public static final String FILE_NAME_TO_READ_FROM = "one-million-challenge";
+    public static final String FILE_NAME_TO_WRITE_INTO = "one-million-challenge";
 
-        EXTRACTORS.put(new EmptyStreamTxtFileExtractor(), "emptyStreamTxtFile");
-        EXTRACTORS.put(new StreamTxtFileExtractor(), "streamTxtFile");
+    private static final int SCRIPT_MOD = 0; // == 0 -> generation ; != 0 -> extraction
 
-        EXTRACTORS.put(new EmptyBufferReaderTxtFileExtractor(), "emptyBufferReader");
-        EXTRACTORS.put(new BufferReaderTxtFileExtractor(), "bufferReader");
-
-        EXTRACTORS.put(new EmptySeekableByteChannelTxtFileExtractor(), "emptySeekableByteChannel");
-        EXTRACTORS.put(new SeekableByteChannelTxtFileExtractor(), "seekableByteChannel");
-
-    }
+    private static final TxtFileGenerator GENERATOR = new SeekableByteChannelTxtFileGenerator();
+    private static final TxtFileExtractor EXTRACTOR = new SeekableByteChannelTxtFileExtractor();
 
     public static void main( String[] args )
     {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Choose script:");
-        System.out.println("1- generation_script");
-        System.out.println("2- extraction_script");
-        System.out.println();
+        System.out.println("Click to start");
+        sc.nextLine();
 
-        String choice = sc.nextLine();
-
-        switch (choice) {
-            case "1": generation_script(); break;
-            case "2": extraction_script(); break;
-            default: extraction_script(); break;
+        if(SCRIPT_MOD == 0) {
+            generation_script();
+        }
+        else {
+            extraction_script();
         }
 
         System.out.println();
@@ -58,42 +48,45 @@ public class App
 
     public static void generation_script() {
 
-        System.out.println("SCRIPT: generation_script #started");
-        long start = System.nanoTime();
+        System.out.println("┌SCRIPT: generation_script #started");
+        System.out.println("│");
 
-        TxtFileGenerator fg = new SeekableByteChannelTxtFileGenerator();
-        fg.generate("one-million-challenge", 100_000_000L);
+        var response = Timer.stopwatch(GENERATOR);
 
-        long end = System.nanoTime();
-        System.out.printf("SCRIPT: generation_script #ended %s ms", (end-start)/1_000_000);
+        var generationResult = response.result();
+
+        if(generationResult.success()) {
+            System.out.println("├SCRIPT: generation_script #success");
+        }
+        else {
+            System.out.printf("├SCRIPT: generation_script #failed #reason(%s)", generationResult.failReason());
+        }
+
+        System.out.println("│");
+        System.out.printf("└SCRIPT: generation_script #ended #time(%s ms)", response.time());
+        System.out.println();
+
 
     }
 
     public static void extraction_script() {
-        EXTRACTORS.forEach(App::extraction_script);
-    }
 
-    public static void extraction_script(TxtFileExtractor tfe, String extractorName) {
+        System.out.println("┌SCRIPT: extraction_script #started");
+        System.out.println("│");
 
-        System.out.println();
-        System.out.println("SCRIPT: extraction_script(" + extractorName + ") #started");
+        var response = Timer.stopwatch(EXTRACTOR);
 
-        long start = System.nanoTime();
-        var result = tfe.extract("one-million-challenge");
-        long end = System.nanoTime();
+        var extractionResult = response.result();
 
-        if(result.success()) {
-
-            System.out.printf("SCRIPT: extraction_script(%s) #ended #time(%s ms) #sum(%s$%b)",
-                    extractorName, (end-start)/1_000_000, result.totalSum(), -15673375262273L == result.totalSum());
-
+        if(extractionResult.success()) {
+            System.out.printf("├SCRIPT: extraction_script #success #time(%s ms) #sum(%s$%b)",
+                    response.time(), extractionResult.totalSum(), -15673375262273L == extractionResult.totalSum());
         } else {
-
-            result.failReason().ifPresent(System.err::println);
-            System.out.println();
-
+            System.out.printf("├SCRIPT: extraction_script #failed #reason(%s)", extractionResult.failReason());
         }
 
+        System.out.println("│");
+        System.out.printf("└SCRIPT: extraction_script #ended #time(%s ms)", response.time());
         System.out.println();
 
     }
